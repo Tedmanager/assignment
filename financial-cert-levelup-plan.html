@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>금융 자격증 레벨업 게임 기획서 (초안)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #F2F6FA;
+    --surface: #FFFFFF;
+    --ink: #1B2440;
+    --muted: #5B6788;
+    --line: #D5DDE8;
+    --gold: #E8A600;
+    --gold-soft: #FFF3CC;
+    --green: #1F9D74;
+    --green-soft: #DDF4EA;
+    --boss: #C2410C;
+    --boss-soft: #FDE7DC;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #12182B;
+      --surface: #1B2338;
+      --ink: #E8ECF5;
+      --muted: #A0AAC4;
+      --line: #2F3A55;
+      --gold: #F5C02E;
+      --gold-soft: #3A3215;
+      --green: #4CC79C;
+      --green-soft: #173A30;
+      --boss: #F28A5B;
+      --boss-soft: #3D2318;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+  h1, h2, .world-name, .phase-name {
+    font-family: "Jua", "Noto Sans KR", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  h1 { font-size: clamp(30px, 6vw, 44px); line-height: 1.25; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 14px; margin: 0 0 40px; }
+
+  .hero {
+    background: var(--surface);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--gold);
+    margin-bottom: 56px;
+  }
+  .hero p { margin: 0 0 16px; font-size: 18px; }
+  .goals { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .goals li { display: flex; gap: 12px; align-items: baseline; }
+  .goals .tag {
+    flex: none; font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 999px;
+    background: var(--gold-soft); color: var(--ink);
+  }
+  .goals li:nth-child(2) .tag { background: var(--boss-soft); }
+  .goals li:nth-child(3) .tag { background: var(--green-soft); }
+
+  section { margin-bottom: 56px; }
+  h2 { font-size: 28px; margin: 0 0 12px; }
+  h2 small { font-family: "Noto Sans KR", sans-serif; font-size: 15px; color: var(--muted); font-weight: 500; margin-left: 8px; }
+  h3 { font-size: 17px; margin: 28px 0 8px; }
+  p { margin: 0 0 14px; }
+  ul.plain { margin: 0 0 14px; padding-left: 20px; }
+  ul.plain li { margin-bottom: 6px; }
+  strong { font-weight: 700; }
+
+  /* World map */
+  .map { list-style: none; margin: 20px 0 8px; padding: 0; position: relative; }
+  .map::before {
+    content: ""; position: absolute; left: 23px; top: 24px; bottom: 24px;
+    border-left: 3px dotted var(--line);
+  }
+  .world { display: grid; grid-template-columns: 48px 1fr; gap: 16px; margin-bottom: 14px; position: relative; }
+  .world .num {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--surface); border: 2px solid var(--ink);
+    font-family: "Jua", sans-serif; font-size: 20px; z-index: 1;
+  }
+  .world .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px;
+  }
+  .world-name { font-size: 20px; margin: 0; }
+  .world .learn { margin: 2px 0 6px; color: var(--ink); }
+  .world .cert { font-size: 13px; color: var(--muted); }
+  .world.boss .num { background: var(--boss); color: #fff; border-color: var(--boss); }
+  .world.boss .card { border: 2px solid var(--boss); background: var(--boss-soft); }
+
+  .mechanics { display: grid; gap: 12px; margin-top: 12px; }
+  .mech { border-left: 4px solid var(--gold); padding: 4px 0 4px 16px; }
+  .mech b { display: block; }
+
+  .note {
+    background: var(--green-soft); border-radius: 12px; padding: 14px 18px; font-size: 15px;
+  }
+
+  /* Roadmap */
+  .roadmap { margin: 20px 0; }
+  .phase {
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 18px;
+  }
+  .phase-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .phase-name { font-size: 20px; margin: 0; }
+  .weeks { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .phase p { margin: 4px 0 0; font-size: 15px; }
+  .phase.final { border: 2px solid var(--boss); background: var(--boss-soft); }
+  .gate { display: flex; align-items: center; gap: 14px; padding: 10px 0 10px 22px; font-size: 15px; }
+  .gate .diamond {
+    flex: none; width: 18px; height: 18px; transform: rotate(45deg);
+    border: 2px solid var(--gold); background: var(--gold-soft);
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 12px 0 16px; }
+  .table-wrap { overflow-x: auto; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { width: 110px; color: var(--muted); font-weight: 500; }
+
+  .checklist { list-style: none; padding: 0; margin: 0; }
+  .checklist li { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .checklist input { width: 18px; height: 18px; margin-top: 5px; accent-color: var(--green); flex: none; }
+  .checklist label { cursor: pointer; }
+  input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  @media (max-width: 520px) {
+    .wrap { padding-top: 36px; }
+    .hero { padding: 20px; }
+    th { width: 84px; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>금융 자격증 레벨업 게임 기획서 (초안)</h1>
+  <p class="meta">2026년 11월 9일 작성</p>
+
+  <div class="hero">
+    <p>숫자와 금융이 낯선 상태에서 시작해, 유쾌한 게임 레벨을 하나씩 깨다 보면 투자자산운용사·AFPK·신용분석사 기출을 막힘없이 푸는 수준에 도달하는 PC용 개인 학습 게임이다.</p>
+    <ul class="goals">
+      <li><span class="tag">1차 목표</span><span>숫자와 투자 개념에 익숙해지기 (대학교 1학년 눈높이)</span></li>
+      <li><span class="tag">최종 목표</span><span>세 자격증 실제 기출을 어렵지 않게 풀기</span></li>
+      <li><span class="tag">보너스</span><span>투자 전에 쓸 나만의 판단 기준 만들기</span></li>
+    </ul>
+  </div>
+
+  <section>
+    <h2>1. 왜 <small>Why</small></h2>
+    <p>금융 자격증 3개를 따야 하지만 기초 지식이 부족해 교재를 바로 펴면 막히기 때문에, 기초부터 재미있게 쌓아 올릴 사다리가 필요하다.</p>
+    <ul class="plain">
+      <li><strong>숫자 울렁증</strong>: 수익률, 복리, 비율 같은 계산이 나오면 손이 멈춘다.</li>
+      <li><strong>지식이 쌓이지 않음</strong>: 개념을 띄엄띄엄 접해 서로 연결되지 않고 금방 잊힌다.</li>
+      <li><strong>판단 기준 부재</strong>: 실제로 투자할 때 무엇을 보고 결정할지 나만의 기준이 없다.</li>
+    </ul>
+    <p>게임 형식을 택한 이유는 꾸준함이다. 레벨, 경험치, 보스전 같은 장치가 매일 조금씩 하게 만드는 동기가 된다.</p>
+  </section>
+
+  <section>
+    <h2>2. 무엇을 <small>What</small></h2>
+    <p>최종 결과물은 월드 7개를 차례로 깨는 PC 웹 학습 게임이며, 마지막 월드에서 세 자격증 기출 보스전을 통과하면 클리어다.</p>
+
+    <ol class="map">
+      <li class="world"><span class="num">0</span><div class="card"><p class="world-name">숫자 놀이터</p><p class="learn">퍼센트, 비율, 증감률, 단위(억·조), 계산기 사용</p><span class="cert">공통 기초</span></div></li>
+      <li class="world"><span class="num">1</span><div class="card"><p class="world-name">복리 슬라임의 숲</p><p class="learn">단리·복리, 현재가치·미래가치, 72의 법칙, 연금</p><span class="cert">공통 (AFPK·투자자산운용사 계산 문제)</span></div></li>
+      <li class="world"><span class="num">2</span><div class="card"><p class="world-name">금융상품 시장 골목</p><p class="learn">예금, 채권, 주식, 펀드, ETF, 파생상품 기초</p><span class="cert">투자자산운용사</span></div></li>
+      <li class="world"><span class="num">3</span><div class="card"><p class="world-name">재무제표 던전</p><p class="learn">재무상태표, 손익계산서, 현금흐름표, 재무비율</p><span class="cert">신용분석사</span></div></li>
+      <li class="world"><span class="num">4</span><div class="card"><p class="world-name">위험과 수익의 성</p><p class="learn">기대수익률, 변동성, 분산투자, 자산배분</p><span class="cert">투자자산운용사</span></div></li>
+      <li class="world"><span class="num">5</span><div class="card"><p class="world-name">인생설계 마을</p><p class="learn">보험, 은퇴, 부동산, 상속, 세금 기초</p><span class="cert">AFPK</span></div></li>
+      <li class="world boss"><span class="num">6</span><div class="card"><p class="world-name">보스 레이드</p><p class="learn">과목별 기출에서 실전 모의고사까지</p><span class="cert">투자자산운용사, AFPK, 신용분석사</span></div></li>
+    </ol>
+
+    <h3>핵심 게임 장치</h3>
+    <div class="mechanics">
+      <div class="mech"><b>스테이지</b>월드마다 5~10개. 개념 카드 1장과 문제 5개 내외로 10~15분이면 끝난다.</div>
+      <div class="mech"><b>경험치와 레벨</b>맞힌 문제만큼 경험치. 레벨업하면 칭호를 준다 (예: 계산기 견습생, 복리 마법사).</div>
+      <div class="mech"><b>보스전</b>월드 마지막 스테이지. 정답률 기준을 넘어야 다음 월드가 열린다.</div>
+      <div class="mech"><b>오답 몬스터 도감</b>틀린 문제가 몬스터로 저장되고, 다시 맞히면 처치된다 (복습 장치).</div>
+      <div class="mech"><b>판단 기준 카드 수집 (사이드 퀘스트)</b>개념을 배울 때마다 "투자 전에 나는 이걸 확인한다" 카드를 직접 써서 모은다. 게임이 끝나면 나만의 투자 체크리스트가 완성된다.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. 누구를 <small>Who</small></h2>
+    <p>사용자는 나 혼자이며, 금융·숫자 지식이 거의 없는 상태에서 출발한다.</p>
+    <h3>난이도 원칙: 대학교 1학년에게 가르치듯</h3>
+    <ul class="plain">
+      <li>용어는 처음 나올 때 반드시 쉬운 말로 풀고, 생활 속 예시(용돈, 적금, 월세)를 붙인다.</li>
+      <li>공식은 외우기 전에 "왜 이렇게 되는지"를 숫자 예시로 먼저 보여준다.</li>
+      <li>한 스테이지에 새 개념은 1~2개만 넣는다.</li>
+      <li>문제 난이도는 쉬움, 보통, 기출 수준 순으로 천천히 올린다.</li>
+      <li>CPA·CFA 수준의 어려운 문제는 넣지 않는다. 기준선은 언제나 세 자격증의 기출이다.</li>
+    </ul>
+    <p class="note"><strong>톤</strong>: 놀리지 않고 응원하는 유쾌한 게임. 틀려도 "몬스터가 도망갔다! 다음엔 잡자" 같은 가벼운 피드백.</p>
+  </section>
+
+  <section>
+    <h2>4. 어디서 <small>Where</small></h2>
+    <p>PC 웹 브라우저에서 주로 쓰는 개인용 사이트다.</p>
+    <ul class="plain">
+      <li>화면 기준: PC 넓은 화면 (계산 문제를 풀 때 메모·계산기를 옆에 띄우기 쉬움)</li>
+      <li>모바일: 우선순위 낮음. 이동 중 오답 복습 정도만 되면 충분</li>
+      <li>로그인·공유 기능 없음. 진행 기록은 내 브라우저에 저장</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5. 언제 <small>When</small></h2>
+    <p>마감일이 아직 없으므로 약 22주짜리 4단계 계획을 가정했고, 첫 시험일이 정해지면 거꾸로 계산해 조정한다.</p>
+
+    <div class="roadmap">
+      <div class="phase">
+        <div class="phase-head"><p class="phase-name">1단계 · 준비와 MVP</p><span class="weeks">1~2주차</span></div>
+        <p>시험 순서·일정 확정, 게임 뼈대(스테이지·경험치·오답 도감) 만들기</p>
+        <p>월드 0 샘플 문제 10개로 난이도 테스트</p>
+      </div>
+      <div class="gate"><span class="diamond"></span><span><strong>관문 1</strong> 월드 0 테스트 플레이 완료, 난이도가 맞는지 확인</span></div>
+      <div class="phase">
+        <div class="phase-head"><p class="phase-name">2단계 · 기초 체력</p><span class="weeks">3~8주차</span></div>
+        <p>월드 0 숫자 놀이터, 월드 1 복리 슬라임의 숲, 월드 2 금융상품 시장 골목</p>
+        <p>목표: 퍼센트·복리 계산이 손에 붙고, 금융상품 이름이 낯설지 않다</p>
+      </div>
+      <div class="gate"><span class="diamond"></span><span><strong>관문 2</strong> 월드 0~2 보스전 정답률 80% 이상</span></div>
+      <div class="phase">
+        <div class="phase-head"><p class="phase-name">3단계 · 실력 쌓기</p><span class="weeks">9~18주차</span></div>
+        <p>월드 3 재무제표 던전, 월드 4 위험과 수익의 성, 월드 5 인생설계 마을</p>
+        <p>각 월드 끝에 해당 자격증 기출 맛보기 문제를 섞는다</p>
+      </div>
+      <div class="gate"><span class="diamond"></span><span><strong>관문 3</strong> 과목별 기출 정답률 60% 이상</span></div>
+      <div class="phase final">
+        <div class="phase-head"><p class="phase-name">4단계 · 보스 레이드</p><span class="weeks">19~22주차</span></div>
+        <p>과목별 기출에서 실전 모의고사로 (투자자산운용사, AFPK, 신용분석사)</p>
+        <p><strong>클리어 조건: 자격증별 실전 모의고사 3회 연속 70% 이상</strong></p>
+      </div>
+    </div>
+
+    <p>관문을 넘지 못하면 다음 단계로 가지 않고, 오답 몬스터 도감을 비울 때까지 그 단계를 반복한다.</p>
+
+    <h3>성공 기준 (최종)</h3>
+    <ul class="plain">
+      <li>실제 기출을 풀 때 개념이 낯설어 손이 멈추는 문제가 거의 없다.</li>
+      <li>자격증별 실전 모의고사 3회 연속 70% 이상 (합격선보다 여유 있게 설정한 제안값).</li>
+      <li>판단 기준 카드 20장 이상을 모아 나만의 투자 체크리스트가 완성된다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>6. 어떻게 <small>How</small></h2>
+    <p>혼자서 Claude와 함께, 비용 없이 단순한 웹 기술로 만든다.</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>인력</th><td>나 1명 (기획·학습자) + Claude (문제 생성, 설명 작성, 코드 작성)</td></tr>
+        <tr><th>예산</th><td>0원 목표. 교재·기출문제집 구매 비용만 별도</td></tr>
+        <tr><th>기술</th><td>HTML·CSS·JavaScript 단일 페이지 웹. 문제는 JSON 파일로 관리해 월드별로 추가</td></tr>
+        <tr><th>저장</th><td>브라우저 저장소에 경험치, 레벨, 오답 도감, 판단 기준 카드 기록</td></tr>
+        <tr><th>문제 출처</th><td>개념 문제는 Claude가 생성하고, 기출은 공식 기출·문제집에서 직접 옮겨 입력</td></tr>
+      </table>
+    </div>
+    <h3>제약 조건</h3>
+    <ul class="plain">
+      <li>CPA·CFA 등 상위 자격증 수준 문제는 제외한다.</li>
+      <li>기출 문제 원문은 저작권이 있으므로 개인 학습용으로만 쓰고 외부에 공개하지 않는다.</li>
+      <li>Claude가 만든 문제·해설은 틀릴 수 있으므로, 계산 문제는 교재로 한 번 더 확인한다.</li>
+      <li>개발보다 공부가 우선이다. 게임은 최소 기능(MVP)으로 시작하고 꾸미기는 나중에 한다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>7. 열린 질문과 다음 할 일</h2>
+    <ul class="checklist">
+      <li><input type="checkbox" id="t1"><label for="t1">세 자격증 중 어떤 시험을 먼저, 언제 볼지 정하기 (일정 역산의 기준)</label></li>
+      <li><input type="checkbox" id="t2"><label for="t2">하루 공부 가능 시간 정하기 (예: 평일 30분, 주말 1시간)</label></li>
+      <li><input type="checkbox" id="t3"><label for="t3">공식 시험 과목·출제 비중 확인하기 (금융투자협회, 한국FPSB, 한국금융연수원 공고 기준)</label></li>
+      <li><input type="checkbox" id="t4"><label for="t4">기출문제집 또는 공개 기출 확보 경로 정하기</label></li>
+      <li><input type="checkbox" id="t5"><label for="t5">이 게임을 "나의 성장 라운지" 안의 한 코너로 넣을지, 별도 사이트로 만들지 결정하기</label></li>
+      <li><input type="checkbox" id="t6"><label for="t6">월드 0 스테이지 1~3 문제 샘플을 만들어 난이도 테스트하기</label></li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
